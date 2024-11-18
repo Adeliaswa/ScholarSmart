@@ -1,0 +1,117 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Mahasiswa {
+    String nama;
+    String nim;
+    String prodi;
+    String namaBeasiswa;
+
+    
+    Mahasiswa(String nama, String nim, String prodi, String namaBeasiswa) {
+        this.nama = nama; 
+        this.nim = nim; 
+        this.prodi = prodi;
+        this.namaBeasiswa = namaBeasiswa;
+    }
+}
+
+public class ScholarSmart {
+    static ArrayList<Mahasiswa> daftarMahasiswa = new ArrayList<>(); 
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int pilihan;
+
+        do {
+            System.out.println("\n--------------------------------------");
+            System.out.println("\nSelamat datang di ScholarSmart-! >.< ");
+            System.out.println("ScholarSmart adalah aplikasi untuk pendataan beasiswa mahasiswa Fakultas Ilmu Komputer Universitas Brawijaya.");
+            System.out.println("\nMenu ScholarSmart:");
+            System.out.println("1. Tambah Data Mahasiswa");
+            System.out.println("2. Tampilkan Daftar Mahasiswa");
+            System.out.println("3. Hapus Data Mahasiswa");
+            System.out.println("4. Edit Data Mahasiswa");
+            System.out.println("5. Keluar");
+            System.out.print("Silahkan pilih menu (1-5): ");
+            pilihan = input.nextInt();
+            input.nextLine();
+
+            switch (pilihan) {
+                case 1:
+                    tambahMahasiswa(input);
+                    break;
+                case 2:
+                    tampilkanMahasiswa();
+                    break;
+                case 3:
+                    hapusMahasiswa(input);
+                    break;
+                case 4:
+                    editMahasiswa(input);
+                    break;
+                case 5:
+                    System.out.println("Terima kasih!");
+                    break;
+                default:
+                    System.out.println("Pilihan tidak valid.");
+            }
+        } while (pilihan != 5);
+    }
+
+    public static void tambahMahasiswa(Scanner input) {
+        System.out.print("Nama Lengkap: ");
+        String nama = input.nextLine();
+        System.out.print("NIM: ");
+        String nim = input.nextLine();
+        System.out.print("Program Studi dan angkatan: ");
+        String prodi = input.nextLine();
+        System.out.print("Nama Beasiswa dan tahunnya: ");
+        String namaBeasiswa = input.nextLine();
+
+        daftarMahasiswa.add(new Mahasiswa(nama, nim, prodi, namaBeasiswa));
+        System.out.println("Data berhasil ditambahkan.");
+    }
+
+    public static void tampilkanMahasiswa() {
+        if (daftarMahasiswa.isEmpty()) {
+            System.out.println("Tidak ada data mahasiswa.");
+        } else {
+            for (Mahasiswa m : daftarMahasiswa) { 
+                System.out.println("\nData mahasiswa Filkom UB yang mendapatkan beasiswa: ");
+                System.out.println("\nNama Lengkap: " + m.nama + "\nNIM: " + m.nim + "\nProgram Studi: " + m.prodi + "\nNama Beasiswa: " + m.namaBeasiswa);
+            }
+        }
+    }
+
+    public static void hapusMahasiswa(Scanner input) {
+        System.out.print("Masukkan NIM untuk dihapus: ");
+        String nimHapus = input.nextLine();
+        for (int i = 0; i < daftarMahasiswa.size(); i++) { 
+            if (daftarMahasiswa.get(i).nim.equals(nimHapus)) { 
+                daftarMahasiswa.remove(i); 
+                System.out.println("Data berhasil dihapus.");
+                return; //menghentikan eksekusi metode
+            }
+        }
+        System.out.println("Data mahasiswa tidak ditemukan.");
+    }
+
+    public static void editMahasiswa(Scanner input) {
+        System.out.print("Masukkan NIM untuk diedit: ");
+        String nimEdit = input.nextLine();
+        for (Mahasiswa m : daftarMahasiswa) {
+            if (m.nim.equals(nimEdit)) {
+                System.out.print("Nama Lengkap: ");
+                m.nama = input.nextLine();
+                System.out.print("Program Studi dan angkatan: ");
+                m.prodi = input.nextLine();
+                System.out.print("Nama Beasiswa baru dan tahunnya: ");
+                m.namaBeasiswa = input.nextLine();
+                System.out.println("Data mahasiswa berhasil diperbarui.");
+                return;
+            }
+        }
+        System.out.println("Data mahasiswa tidak ditemukan.");
+    }
+}
