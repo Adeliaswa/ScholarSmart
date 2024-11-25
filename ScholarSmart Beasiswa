@@ -1,23 +1,25 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class Mahasiswa {
-    String nama;
-    String nim;
-    String prodi;
-    String namaBeasiswa;
+public class ScholarSmart1 {
 
-    
-    Mahasiswa(String nama, String nim, String prodi, String namaBeasiswa) {
-        this.nama = nama; 
-        this.nim = nim; 
-        this.prodi = prodi;
-        this.namaBeasiswa = namaBeasiswa;
+    static class Mahasiswa {
+        String nama;
+        String nim;
+        String prodi;
+        String namaBeasiswa;
+        String angkatan;
+
+        Mahasiswa(String nama, String nim, String prodi, String namaBeasiswa, String angkatan) {
+            this.nama = nama;
+            this.nim = nim;
+            this.prodi = prodi;
+            this.namaBeasiswa = namaBeasiswa;
+            this.angkatan = angkatan;
+        }
     }
-}
-
-public class ScholarSmart {
-    static ArrayList<Mahasiswa> daftarMahasiswa = new ArrayList<>(); 
+    static ArrayList<Mahasiswa> daftarMahasiswa = new ArrayList<>();
+    static String[] angkatan = {"2021", "2022", "2023", "2024"};
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -42,7 +44,7 @@ public class ScholarSmart {
                     tambahMahasiswa(input);
                     break;
                 case 2:
-                    tampilkanMahasiswa();
+                    tampilkanMahasiswa(input);
                     break;
                 case 3:
                     hapusMahasiswa(input);
@@ -59,44 +61,86 @@ public class ScholarSmart {
         } while (pilihan != 5);
     }
 
+    //untuk menambah data mahasiswa
     public static void tambahMahasiswa(Scanner input) {
         System.out.print("Nama Lengkap: ");
         String nama = input.nextLine();
         System.out.print("NIM: ");
         String nim = input.nextLine();
-        System.out.print("Program Studi dan angkatan: ");
+        System.out.print("Program Studi: ");
         String prodi = input.nextLine();
-        System.out.print("Nama Beasiswa dan tahunnya: ");
+        System.out.print("Nama Beasiswa: ");
         String namaBeasiswa = input.nextLine();
 
-        daftarMahasiswa.add(new Mahasiswa(nama, nim, prodi, namaBeasiswa));
+        System.out.println("\nPilih angkatan mahasiswa:");
+        for (int i = 0; i < angkatan.length; i++) {
+            System.out.println((i + 1) + ". " + angkatan[i]);
+        }
+        System.out.print("Masukkan nomor angkatan (1-4): ");
+        int pilihanAngkatan = input.nextInt();
+        input.nextLine();
+
+        if (pilihanAngkatan < 1 || pilihanAngkatan > 4) {
+            System.out.println("Pilihan angkatan tidak valid. Data tidak dapat ditambahkan.");
+            return;
+        }
+
+        String angkatanTerpilih = angkatan[pilihanAngkatan - 1];
+        daftarMahasiswa.add(new Mahasiswa(nama, nim, prodi, namaBeasiswa, angkatanTerpilih));
         System.out.println("Data berhasil ditambahkan.");
     }
 
-    public static void tampilkanMahasiswa() {
+    //untuk menampilkan daftar mahasiswa
+    public static void tampilkanMahasiswa(Scanner input) {
         if (daftarMahasiswa.isEmpty()) {
             System.out.println("Tidak ada data mahasiswa.");
-        } else {
-            for (Mahasiswa m : daftarMahasiswa) { 
-                System.out.println("\nData mahasiswa Filkom UB yang mendapatkan beasiswa: ");
+            return;
+        }
+
+        System.out.println("\nPilih angkatan untuk melihat data beasiswa:");
+        for (int i = 0; i < angkatan.length; i++) {
+            System.out.println((i + 1) + ". " + angkatan[i]);
+        }
+        System.out.print("Masukkan nomor angkatan (1-4): ");
+        int pilihanAngkatan = input.nextInt();
+        input.nextLine();
+
+        if (pilihanAngkatan < 1 || pilihanAngkatan > 4) {
+            System.out.println("Pilihan angkatan tidak valid.");
+            return;
+        }
+
+        String angkatanTerpilih = angkatan[pilihanAngkatan - 1];
+        System.out.println("\nData mahasiswa Filkom UB yang mendapatkan beasiswa pada angkatan " + angkatanTerpilih + ":");
+
+        boolean ditemukan = false;
+        for (Mahasiswa m : daftarMahasiswa) {
+            if (m.angkatan.equals(angkatanTerpilih)) {
                 System.out.println("\nNama Lengkap: " + m.nama + "\nNIM: " + m.nim + "\nProgram Studi: " + m.prodi + "\nNama Beasiswa: " + m.namaBeasiswa);
+                ditemukan = true;
             }
+        }
+
+        if (!ditemukan) {
+            System.out.println("Tidak ada data mahasiswa pada angkatan " + angkatanTerpilih + ".");
         }
     }
 
+    //untuk menghapus data mahasiswa
     public static void hapusMahasiswa(Scanner input) {
         System.out.print("Masukkan NIM untuk dihapus: ");
         String nimHapus = input.nextLine();
-        for (int i = 0; i < daftarMahasiswa.size(); i++) { 
-            if (daftarMahasiswa.get(i).nim.equals(nimHapus)) { 
-                daftarMahasiswa.remove(i); 
+        for (int i = 0; i < daftarMahasiswa.size(); i++) {
+            if (daftarMahasiswa.get(i).nim.equals(nimHapus)) {
+                daftarMahasiswa.remove(i);
                 System.out.println("Data berhasil dihapus.");
-                return; //menghentikan eksekusi metode
+                return;
             }
         }
         System.out.println("Data mahasiswa tidak ditemukan.");
     }
 
+    //untuk mengedit data mahasiswa
     public static void editMahasiswa(Scanner input) {
         System.out.print("Masukkan NIM untuk diedit: ");
         String nimEdit = input.nextLine();
@@ -104,10 +148,24 @@ public class ScholarSmart {
             if (m.nim.equals(nimEdit)) {
                 System.out.print("Nama Lengkap: ");
                 m.nama = input.nextLine();
-                System.out.print("Program Studi dan angkatan: ");
+                System.out.print("Program Studi: ");
                 m.prodi = input.nextLine();
-                System.out.print("Nama Beasiswa baru dan tahunnya: ");
+                System.out.print("Nama Beasiswa: ");
                 m.namaBeasiswa = input.nextLine();
+
+                System.out.println("\nPilih angkatan baru untuk mahasiswa:");
+                for (int i = 0; i < angkatan.length; i++) {
+                    System.out.println((i + 1) + ". " + angkatan[i]);
+                }
+                System.out.print("Masukkan nomor angkatan (1-4): ");
+                int pilihanAngkatan = input.nextInt();
+                input.nextLine();
+
+                if (pilihanAngkatan < 1 || pilihanAngkatan > 4) {
+                    System.out.println("Pilihan angkatan tidak valid. Data tidak diperbarui.");
+                    return;
+                }
+                m.angkatan = angkatan[pilihanAngkatan - 1];
                 System.out.println("Data mahasiswa berhasil diperbarui.");
                 return;
             }
